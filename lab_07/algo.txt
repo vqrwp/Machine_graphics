@@ -1,0 +1,135 @@
+
+// само отсечение
+void MainWindow::on_cut_button_clicked()
+{
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
+    // если на холсте есть и отсекатель и отрезки
+    if (flag_line_exist && flag_rect_set)
+    {
+        // пока не пройдем все отрезки
+        for (int j = 0; j < lines.size(); j += 2)
+        {
+            // lines[i] = P1 and lines[i + 1] = P2 // P1, P2 - points
+
+            int i = 1; // шаг отсечения
+
+            QPoint P1 = lines[j];
+            QPoint P2 = lines[j + 1];
+
+            qDebug() << P1 << P2;
+
+            int T1[NUM_BITS]; // = 4 битовый код первой точки
+            int T2[NUM_BITS]; // = 4 битовый код второй точки
+
+            int S1, S2; // Summ of BITS T1 and BITS T2
+            while (1)
+            {
+                // вычисляем значения битовых кодов точек
+                set_bits(rect, P1, T1);
+                set_bits(rect, P2, T2);
+
+                S1 = get_sum(T1, NUM_BITS);
+                S2 = get_sum(T2, NUM_BITS);
+
+                if (S1 == 0 && S2 == 0)
+                {
+                    qDebug() << "Отрезок тривиально видим.";
+                    painter->setPen(QPen(outline_color, 2));
+
+                    // закрашиваем отрезок целиком
+                    painter->drawLine(P1.x(), P1.y(), P2.x(), P2.y());
+                    ui->draw_label->setPixmap(*scene);
+
+                    // заканчиваем просмотр данного отрезка
+                    break;
+                }
+
+                int P = logic_mult(T1, T2, NUM_BITS);
+
+                QPoint R;
+                QPoint tmp;
+
+                // если логическое побитовое произведение концевых точек равно нулю
+                if (P == 0) // то имеют целесообразность дальнейшие проверки
+                {
+                    R = P1; // запоминаем первую концевую точку
+                    // если это не первый и не второй шаг отсечения
+                    if (i > 2)
+                    {
+                        int Pr = logic_mult(T1, T2, NUM_BITS);
+                        // если логическое произ. = 0, то точно оставшийся отрезок видим
+                        if (Pr == 0)
+                        {
+                            qDebug() << P1 << P2;
+                            painter->setPen(QPen(outline_color, 2));
+                            painter->drawLine(P1.x(), P1.y(), P2.x(), P2.y());
+                            ui->draw_label->setPixmap(*scene);
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    // побитовый код второй точки 0, она лежит внутри
+                    if (S2 == 0)
+                    {
+                        P1 = P2; // меняем точки местами, чтобы два раза не прописывать алгоритм
+                        P2 = R; // R = old P1
+                        i++;
+                    }
+                    else // if (S1 == 0) побитовый код первой точки 0, она лежит внутри
+                    {
+                        // пока отрезок не вырождается в точку (проверяем через диаг. пикселя)
+                        while (abs(P1.x() - P2.x()) > ACCURACY || abs(P1.y() - P2.y()) > ACCURACY)
+                        {
+                            QPoint Pm;
+                            // вычисляем координаты средней точки
+                            Pm.setX((P1.x() + P2.x()) >> 1); // здесь побитовый сдвиг вправо
+                            Pm.setY((P1.y() + P2.y()) >> 1); // это как деление на 2
+
+                            tmp = P1; // запоминаем первую точку
+                            P1 = Pm; // теперь Р1 как бы средняя точка
+
+                            // битовый код средней точки
+                            set_bits(rect, P1, T1);
+
+                            int pr = logic_mult(T1, T2, NUM_BITS);
+                            if (pr != 0) // если Рм && P2 != 0 то откидываем эту часть отрезка
+                            { // отрезок Рм Р2 невидим
+                                P1 = tmp; // возвращаем Р1
+                                P2 = Pm;
+                            }
+                        }
+                        P1 = P2; // опять меняем точки местами
+                        P2 = R; // R = old P1
+                        i++; // увеличиваем шаг отсечения
+                    }
+                }
+                // если логическое побитовое произведение кодов концевых точек не равно 0
+                else
+                {
+                    qDebug() << "Отрезок тривиально невидим.";
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
+        if (!flag_rect_set && flag_line_exist)
+        {
+            message_box(QString("Вы не ввели отсекатель!"));
+        }
+        else if (!flag_line_exist && flag_rect_set)
+        {
+            message_box(QString("Вы не нарисовали линии!"));
+        }
+        else
+        {
+            message_box(QString("Вы не нарисовали линии и не ввели отсекатель!"));
+        }
+
+    }
+}
