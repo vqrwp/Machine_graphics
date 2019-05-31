@@ -3,15 +3,15 @@
 
 Не совсем так сказать уникальные лабы, зато в 3 есть алгоритм Ву, оценка длин ступеней и времени выполнения алгоритмов.
 
-| Labs | State |
-| --- | --- |
-| 1 | passed |
-| 2 | passed |
-| 3 | passed |
-| 4 | passed |
-| 5 | passed |
-| 6 | passed |
-| 7 | working |
-| 8 | working |
-| 9 | - |
-| 10 | - |
+| Labs | State | Language & Lib |
+| --- | --- | --- |
+| 1 | passed | Python, Tkinter |
+| 2 | passed | Python, Tkinter |
+| 3 | passed | Python, Tkinter |
+| 4 | passed | Python, Tkinter |
+| 5 | passed | C++, Qt |
+| 6 | passed | C++, Qt |
+| 7 | passed | C++, Qt |
+| 8 | passed | C++, Qt |
+| 9 | working | C++, Qt |
+| 10 | - | - |
