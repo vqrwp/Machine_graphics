@@ -1,0 +1,13 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\canvas.o
+./release\scalar_mult.o
+./release\vector_mult.o
+./release\vector_len.o
+./release\calculate_parametrical.o
+./release\distance.o
+./release\normal_funcs.o
+./release\moc_mainwindow.o
+./release\moc_canvas.o
+);
