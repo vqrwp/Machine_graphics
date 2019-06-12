@@ -4,7 +4,7 @@
 
 void canvas::fill_polygon(QPainter &painter, bool slow)
 {
-    // ПЕРЕСЕЧЕНИЕ ОПРЕДЕЛЯЕТСЯ С ПОМОЩЬЮ АЛГОРИТМА БРЕЗЕНХЕМА
+    // ПЕРЕСЕЧЕНИЕ ОПРЕДЕЛЯЕТСЯ С ПОМОЩЬЮ АЛГОРИТМА ЦДА хз че ето чисто геометрически
     int tmp_start = 0;
     int sep = 0;
     for (int i = 0; i < edges.size(); i++)
