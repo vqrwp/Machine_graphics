@@ -13,5 +13,5 @@
 | 6 | passed | C++, Qt | - |
 | 7 | passed | C++, Qt | middle dot |
 | 8 | passed | C++, Qt | - |
-| 9 | Kurov is gay | C++, Qt | - |
+| 9 | 🤡 | C++, Qt | - |
 | 10 | passed | C++, Qt | - |
